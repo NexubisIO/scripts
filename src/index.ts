@@ -6,8 +6,6 @@ import { TextPlugin } from 'gsap/TextPlugin';
 import Swiper from 'swiper';
 import { Pagination } from 'swiper/modules';
 
-import { greetUser } from '$utils/greet';
-
 import { initMarquee } from './utils/marquee';
 
 gsap.registerPlugin(ScrollTrigger, TextPlugin);
@@ -55,6 +53,9 @@ const createTextBlurAnimation = (element, options = {}) => {
 
   // Replace the original content with the processed one
   text.innerHTML = tempDiv.innerHTML;
+
+  // Apply white-space: nowrap to the container
+  text.style.whiteSpace = 'nowrap';
 
   // Select all animation targets
   const targets = text.querySelectorAll('.blur-animation-letter');
