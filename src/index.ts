@@ -25,13 +25,13 @@ const createTextBlurAnimation = (element, options = {}) => {
   // Process all text nodes while preserving HTML structure
   const processTextNodes = (node) => {
     if (node.nodeType === Node.TEXT_NODE && node.textContent.trim() !== '') {
-      // Split this text node into individual characters
-      const letters = node.textContent.split('');
+      // Split this text node into individual words
+      const words = node.textContent.split(' ');
       const fragment = document.createDocumentFragment();
 
-      letters.forEach((letter) => {
+      words.forEach((word, index) => {
         const span = document.createElement('span');
-        span.innerHTML = letter === ' ' ? '&nbsp;' : letter;
+        span.innerHTML = word;
         span.style.display = 'inline-block';
         span.style.filter = 'blur(10px)';
         span.style.opacity = '0';
@@ -39,6 +39,12 @@ const createTextBlurAnimation = (element, options = {}) => {
         span.style.transform = 'translateX(20px) translateY(10px)';
         span.classList.add('blur-animation-letter');
         fragment.appendChild(span);
+
+        // Add a space between words
+        if (index < words.length - 1) {
+          const space = document.createTextNode(' ');
+          fragment.appendChild(space);
+        }
       });
 
       node.parentNode.replaceChild(fragment, node);
@@ -54,9 +60,6 @@ const createTextBlurAnimation = (element, options = {}) => {
   // Replace the original content with the processed one
   text.innerHTML = tempDiv.innerHTML;
 
-  // Apply white-space: nowrap to the container
-  text.style.whiteSpace = 'nowrap';
-
   // Select all animation targets
   const targets = text.querySelectorAll('.blur-animation-letter');
 
@@ -67,7 +70,7 @@ const createTextBlurAnimation = (element, options = {}) => {
     opacity: 1,
     x: 0,
     y: 0,
-    stagger: 0.02,
+    stagger: 0.1, // Adjust stagger for words
     duration: 0.8,
     ease: 'power2.out',
   });
