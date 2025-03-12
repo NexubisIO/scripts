@@ -15,7 +15,7 @@ gsap.registerPlugin(ScrollTrigger, TextPlugin);
 const text = new SplitType('.hero_title', { types: 'words, chars' });
 
 // Apply the blur animation using GSAP
-gsap.from(text.chars, {
+gsap.from(text.words, {
   filter: 'blur(10px)',
   opacity: 0,
   x: 20,
