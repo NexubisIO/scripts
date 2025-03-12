@@ -14,17 +14,6 @@ gsap.registerPlugin(ScrollTrigger, TextPlugin);
 // Utility function to create text blur animation without SplitText plugin
 const text = new SplitType('.hero_title', { types: 'words, chars' });
 
-// Apply the blur animation using GSAP
-gsap.from(text.words, {
-  filter: 'blur(10px)',
-  opacity: 0,
-  x: 20,
-  y: 10,
-  duration: 0.8,
-  stagger: 0.1,
-  ease: 'power2.out',
-});
-
 // Utility function for scroll triggered animations
 const createScrollTriggerAnimation = (selector, options = {}) => {
   const elements = document.querySelectorAll(selector);
@@ -198,8 +187,19 @@ const initPageLoadAnimations = () => {
   );
 
   // Hero title with text blur
-  masterTl.add(createTextBlurAnimation('.hero_title'), 1.8);
-
+  masterTl.from(
+    text.words,
+    {
+      filter: 'blur(10px)',
+      opacity: 0,
+      x: 20,
+      y: 10,
+      duration: 0.8,
+      stagger: 0.1,
+      ease: 'power2.out',
+    },
+    1.8
+  );
   // Hero content animation - Use from instead of fromTo
   masterTl.from(
     '.hero_content',
