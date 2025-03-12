@@ -3,6 +3,7 @@ import 'swiper/css';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { TextPlugin } from 'gsap/TextPlugin';
+import SplitType from 'split-type';
 import Swiper from 'swiper';
 import { Pagination } from 'swiper/modules';
 
@@ -11,72 +12,18 @@ import { initMarquee } from './utils/marquee';
 gsap.registerPlugin(ScrollTrigger, TextPlugin);
 
 // Utility function to create text blur animation without SplitText plugin
-const createTextBlurAnimation = (element, options = {}) => {
-  const text = document.querySelector(element);
-  if (!text) return;
+const text = new SplitType('.hero_title', { types: 'words, chars' });
 
-  // Store the original HTML to preserve structure
-  const originalHTML = text.innerHTML;
-
-  // Create a temporary div to work with the content
-  const tempDiv = document.createElement('div');
-  tempDiv.innerHTML = originalHTML;
-
-  // Process all text nodes while preserving HTML structure
-  const processTextNodes = (node) => {
-    if (node.nodeType === Node.TEXT_NODE && node.textContent.trim() !== '') {
-      // Split this text node into individual words
-      const words = node.textContent.split(' ');
-      const fragment = document.createDocumentFragment();
-
-      words.forEach((word, index) => {
-        const span = document.createElement('span');
-        span.innerHTML = word;
-        span.style.display = 'inline-block';
-        span.style.filter = 'blur(10px)';
-        span.style.opacity = '0';
-        span.style.position = 'relative';
-        span.style.transform = 'translateX(20px) translateY(10px)';
-        span.classList.add('blur-animation-letter');
-        fragment.appendChild(span);
-
-        // Add a space between words
-        if (index < words.length - 1) {
-          const space = document.createTextNode(' ');
-          fragment.appendChild(space);
-        }
-      });
-
-      node.parentNode.replaceChild(fragment, node);
-    } else if (node.nodeType === Node.ELEMENT_NODE) {
-      // Process child nodes recursively
-      Array.from(node.childNodes).forEach(processTextNodes);
-    }
-  };
-
-  // Process all text nodes in the temp div
-  Array.from(tempDiv.childNodes).forEach(processTextNodes);
-
-  // Replace the original content with the processed one
-  text.innerHTML = tempDiv.innerHTML;
-
-  // Select all animation targets
-  const targets = text.querySelectorAll('.blur-animation-letter');
-
-  // Create timeline for animation
-  const tl = gsap.timeline(options);
-  tl.to(targets, {
-    filter: 'blur(0px)',
-    opacity: 1,
-    x: 0,
-    y: 0,
-    stagger: 0.1, // Adjust stagger for words
-    duration: 0.8,
-    ease: 'power2.out',
-  });
-
-  return tl;
-};
+// Apply the blur animation using GSAP
+gsap.from(text.chars, {
+  filter: 'blur(10px)',
+  opacity: 0,
+  x: 20,
+  y: 10,
+  duration: 0.8,
+  stagger: 0.1,
+  ease: 'power2.out',
+});
 
 // Utility function for scroll triggered animations
 const createScrollTriggerAnimation = (selector, options = {}) => {
